@@ -176,7 +176,7 @@ class WandbOutputFormat(KVWriter):
     """
     Uploads key/value pairs to the wandb service for logging (wandb.com).
     """
-    def __init__(self, project_name='baselines', model_name='', args=None, **kwargs):
+    def __init__(self, project_name='baselines', model_name='', wandb_dir=None, args=None, **kwargs):
         """
         Constructor of the WandbOutputFormat logger.
         :param project_name: Project name for the wandb service.
@@ -184,7 +184,10 @@ class WandbOutputFormat(KVWriter):
         :param args: arguments and hyperparameters to be attached to the experiment
         """
         import wandb
-        wandb.init(config=args, project=project_name, name=model_name)
+        if wandb_dir is None:
+            wandb.init(config=args, project=project_name, name=model_name)
+        else:
+            wandb.init(config=args, project=project_name, name=model_name, dir=wandb_dir)
         self.step = 1
 
     def writekvs(self, kvs):
